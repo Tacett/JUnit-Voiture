@@ -30,7 +30,7 @@ public class Voiture {
 	public void entreAuGarage(Garage g) throws Exception {
 		// Et si la voiture est déjà dans un garage ?
                 if (estDansUnGarage() && myStationnements.isEmpty()==false){
-                    throw new java.lang.Exception("Stationnements en cours");
+                    throw new java.lang.Exception("Stationnements déjà en cours");
                 }
 		Stationnement s = new Stationnement(this, g);
 		myStationnements.add(s);
@@ -70,7 +70,7 @@ public class Voiture {
 
 	/**
 	 * Pour chaque garage visité, imprime le nom de ce garage suivi de la liste des dates d'entrée / sortie dans ce
-	 * garage
+	 * garagerf
 	 * <br>Exemple :
 	 * <pre>
 	 * Garage Castres:
@@ -84,7 +84,27 @@ public class Voiture {
 	 */
 	public void imprimeStationnements(PrintStream out) {
 		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+		Map<Garage,List<Stationnement>> list = getStationnementByGarages();
+
+			for( Garage g : list.keySet() ){
+				out.println(g.toString());
+				for (Stationnement stat : list.get(g) ){
+					out.println("\t"+stat.toString());
+				}
+			}
+        }
+        
+        private Map<Garage,List<Stationnement>> getStationnementByGarages(){
+            
+            Map<Garage,List<Stationnement>> map = new HashMap<>();
+            for ( Stationnement stationnement : myStationnements){
+                if(map.containsKey(stationnement.getGarage())){
+                    map.get(stationnement.getGarage()).add(stationnement);
+                }else{
+                    map.put(stationnement.getGarage(), new ArrayList<Stationnement>(){{add(stationnement);}});
+                }
+            }
+            return map;
 	}
 
 }
